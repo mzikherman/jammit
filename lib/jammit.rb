@@ -25,6 +25,8 @@ module Jammit
   COMPRESSORS           = [:yui, :closure, :uglifier]
 
   DEFAULT_COMPRESSOR    = :yui
+  
+  RAILS_ENV             = (defined?(Rails) ? Rails.env : ENV['RAILS_ENV'] || "development")
 
   # Extension matchers for JavaScript and JST, which need to be disambiguated.
   JS_EXTENSION          = /\.js\Z/
@@ -51,7 +53,8 @@ module Jammit
                   :embed_assets, :package_assets, :compress_assets, :gzip_assets,
                   :package_path, :mhtml_enabled, :include_jst_script, :config_path,
                   :javascript_compressor, :compressor_options, :css_compressor_options,
-                  :template_extension, :template_extension_matcher, :allow_debugging
+                  :template_extension, :template_extension_matcher, :allow_debugging,
+                  :rewrite_relative_paths
     attr_accessor :compressors
   end
 
@@ -69,14 +72,14 @@ module Jammit
     conf = YAML.load(ERB.new(File.read(config_path)).result)
 
     # Optionally overwrite configuration based on the environment.
-    rails_env = defined?(Rails) ? Rails.env : ENV['RAILS_ENV']
-    conf.merge! conf.delete rails_env if conf.has_key? rails_env
+    conf.merge! conf.delete RAILS_ENV if conf.has_key? RAILS_ENV
 
     @config_path            = config_path
     @configuration          = symbolize_keys(conf)
     @package_path           = conf[:package_path] || DEFAULT_PACKAGE_PATH
     @embed_assets           = conf[:embed_assets] || conf[:embed_images]
     @compress_assets        = !(conf[:compress_assets] == false)
+    @rewrite_relative_paths = !(conf[:rewrite_relative_paths] == false)
     @gzip_assets            = !(conf[:gzip_assets] == false)
     @allow_debugging        = !(conf[:allow_debugging] == false)
     @mhtml_enabled          = @embed_assets && @embed_assets != "datauri"
