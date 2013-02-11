@@ -90,7 +90,7 @@ module Jammit
     @gzip_assets            = !(conf[:gzip_assets] == false)
     @allow_debugging        = !(conf[:allow_debugging] == false)
     @mhtml_enabled          = @embed_assets && @embed_assets != "datauri"
-    @compressor_options     = symbolize_keys(conf[:compressor_options] || {})
+    @compressor_options     = {}
     @css_compressor_options = symbolize_keys(conf[:css_compressor_options] || {})
     set_javascript_compressor(conf[:javascript_compressor])
     set_css_compressor(conf[:css_compressor])
