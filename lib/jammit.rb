@@ -12,7 +12,7 @@ module Jammit
 
   DEFAULT_PUBLIC_ROOT           = (defined?(Rails) && Rails.public_path.to_s.length > 0) ? Rails.public_path : File.join(ASSET_ROOT, 'public') unless defined?(PUBLIC_ROOT)
 
-  DEFAULT_CONFIG_PATH           = File.join(ASSET_ROOT, 'config', 'assets.yml')
+  DEFAULT_CONFIG_PATH           = "/Users/mzikherman/Artsy/source/gravity/config/assets.yml"
 
   DEFAULT_PACKAGE_PATH          = "assets"
 
